@@ -4,6 +4,8 @@ const chalk = require('chalk')
 const HTMLWebpackPlugin = require('html-webpack-plugin');
 const ProgressBarPlugin = require('progress-bar-webpack-plugin')
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const EndWebpackPlugin = require('../plugins/plugin-demo');
+
 const DEV_MODE = process.env.NODE_ENV !== "production";
 
 /** @type {import("webpack").Configuration} */
@@ -129,10 +131,15 @@ module.exports = {
 
         new MiniCssExtractPlugin({
             filename: '[name].[contenthash].css',
-            // webpack5, MiniCssExtractPlugin 已经内置了对 cssnano 的支持, 启用内置的 cssnano 优化
-            // cssMinimizerOptions: {
-            //     preset: 'default',
-            // },
+        }),
+
+        new EndWebpackPlugin({
+            doneCallback() {
+                console.log('打包完成');
+            },
+            failCallback(err) {
+                console.error(err);
+            }
         })
     ],
 
